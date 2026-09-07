@@ -1,7 +1,4 @@
 rocket TVC 
 
-1: cd "C:\Users\adith\Downloads\rocket tcv"
 python web_server.py
 
-
-2: localhost:8000
