@@ -1,4 +1,43 @@
-rocket TVC 
+Getting the Environment Ready
 
+When you first open up the project, the very first thing you need to do is prepare your Python environment. Make sure you have Python 3.10 or newer installed. You will want to create a clean virtual environment, activate it, and install all the project dependencies so everything runs without interfering with your system packages.
+
+Bash
+python -m venv venv
+source venv/bin/activate
+# On Windows, activate with: venv\Scripts\activate
+
+pip install -r requirements.txt
+Testing the Physics and Environment
+
+Before jumping straight into training the AI, it is best practice to make sure the core physics and environment functions are working properly. We run unit tests on our 4th Order Runge Kutta physics solver and the Gymnasium landing environment to confirm all torque calculations, observation bounds, and reward outputs are mathematically sound.
+
+Bash
+pytest physics/test_physics.py
+pytest envs/test_env.py
+Training the PPO Agent
+
+Once the unit tests pass, you are ready to train the rocket to execute a powered landing using Proximal Policy Optimization. Running the training script initiates rollout collection, and setting an explicit seed ensures your run is reproducible. All model checkpoints and CSV logs will automatically save into the results directory as training progresses.
+
+Bash
+python train.py --iterations 200 --seed 42 --device auto
+Evaluating Landing Performance
+
+After training completes, you can evaluate how reliably your trained policy lands the rocket over a batch of test episodes. This step measures critical touchdown speed, horizontal drift error, and final tilt angles while generating trajectory plots in your results folder.
+
+Bash
+python evaluate.py --checkpoint results/checkpoints/ppo_final.pt --episodes 50
+Launching Mission Control Dashboard
+
+To watch your trained agent fly the rocket in real time, launch the interactive Pygame mission control interface. The UI displays live flight telemetry, gimbal angles, and trajectory maps. While the dashboard is active, press P to pause or resume, R to reset the episode, S to change simulation speed, or Q to quit.
+
+Bash
+python run_dashboard.py --checkpoint results/checkpoints/ppo_final.pt
+Running the Web Interface and Exporting Models
+
+If you prefer to inspect and run simulations inside a web browser, start up the web server and navigate to http://localhost:5000 on your desktop. Finally, if you ever want to deploy your trained landing policy into external software, web applications, or hardware microcontrollers, you can export the trained PyTorch actor network directly into ONNX format.
+
+Bash
 python web_server.py
-
+Bash
+python export_onnx.py --checkpoint results/checkpoints/ppo_final.pt --output results/ppo_actor.onnx
