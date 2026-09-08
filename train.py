@@ -3,10 +3,18 @@ import csv
 from datetime import datetime
 from pathlib import Path
 
+import numpy as np
 import torch
 
 from agent.ppo import PPOAgent, PPOConfig
 from envs.rocket_tvc_env import RocketTVCEnv
+
+
+def set_seed(seed: int) -> None:
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
 
 
 def parse_args() -> argparse.Namespace:
@@ -14,6 +22,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--iterations", type=int, default=200)
     parser.add_argument("--rollout-length", type=int, default=2048)
     parser.add_argument("--lr", type=float, default=3e-4)
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", type=str, default="auto")
     parser.add_argument("--checkpoint-every", type=int, default=25)
     parser.add_argument("--results-dir", type=str, default="results")
@@ -28,6 +37,7 @@ def resolve_device(device_arg: str) -> str:
 
 def main() -> None:
     args = parse_args()
+    set_seed(args.seed)
     device = resolve_device(args.device)
 
     results_dir = Path(args.results_dir)
@@ -46,7 +56,7 @@ def main() -> None:
     )
     agent = PPOAgent(config)
 
-    print(f"Training on {device} for {args.iterations} iterations")
+    print(f"Training on {device} (Seed: {args.seed}) for {args.iterations} iterations")
 
     with log_path.open("w", newline="", encoding="utf-8") as log_file:
         writer = csv.DictWriter(
