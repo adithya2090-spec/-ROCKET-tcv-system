@@ -1,0 +1,17 @@
+# Python bytecode & virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/
+env/
+
+# IDE settings
+.vscode/
+.idea/
+
+# Model Checkpoints, Logs, and Evaluation Outputs
+results/checkpoints/*.pt
+results/plots/*.png
+results/*.csv
+runs/
