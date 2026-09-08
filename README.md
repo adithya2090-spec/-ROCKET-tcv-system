@@ -50,23 +50,23 @@ rocket-tvc/
    ```bash
    pip install -r requirements.txt
 Run Physics & Environment Unit Tests:
-
-Bash
 pytest physics/test_physics.py
 pytest envs/test_env.py
+
 Train the PPO Agent:
-
-Bash
 python train.py --iterations 200 --seed 42 --device auto
+
 Evaluate Performance & Plot Trajectories:
-
-Bash
 python evaluate.py --checkpoint results/checkpoints/ppo_final.pt --episodes 50
-Launch Mission Control Dashboard:
 
-Bash
+Launch Mission Control Dashboard:
 python run_dashboard.py --checkpoint results/checkpoints/ppo_final.pt
+
 Export Model to ONNX:
+python export_onnx.py --checkpoint results/checkpoints/ppo_final.pt
+
+
+
 
 Bash
 python export_onnx.py --checkpoint results/checkpoints/ppo_final.pt
