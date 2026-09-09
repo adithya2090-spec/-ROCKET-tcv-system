@@ -23,6 +23,6 @@ jobs:
           pip install -r requirements.txt
           
       - name: Run Pytest Suite
-        run: |
-          pytest physics/test_physics.py
-          pytest envs/test_env.py
+        - name: Run Pytest Suite
+  run: |
+    pytest --tb=short
